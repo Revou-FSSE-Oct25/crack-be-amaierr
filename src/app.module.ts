@@ -7,13 +7,14 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './authorizations/guards/jwt-auth.guard';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
+import { CoursesModule } from './modules/courses/courses.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule, AuthorizationsModule, UsersModule
+    PrismaModule, AuthorizationsModule, UsersModule, CoursesModule
   ],
   controllers: [AppController],
   providers: [
