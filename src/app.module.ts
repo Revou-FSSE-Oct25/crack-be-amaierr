@@ -6,13 +6,14 @@ import { AuthorizationsModule } from './authorizations/authorizations.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './authorizations/guards/jwt-auth.guard';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule, AuthorizationsModule
+    PrismaModule, AuthorizationsModule, UsersModule
   ],
   controllers: [AppController],
   providers: [

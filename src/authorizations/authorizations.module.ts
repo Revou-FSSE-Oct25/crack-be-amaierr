@@ -6,6 +6,7 @@ import { RolesRepository } from 'src/modules/roles/roles.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategies';
+import { AuthorizationsRepository } from './authorizations.repository';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { JwtStrategy } from './strategies/jwt.strategies';
     })
   ],
   controllers: [AuthorizationsController],
-  providers: [AuthorizationsService, UsersRepository, RolesRepository, JwtStrategy],
+  providers: [AuthorizationsService, UsersRepository, RolesRepository, JwtStrategy, AuthorizationsRepository],
 })
 export class AuthorizationsModule {}

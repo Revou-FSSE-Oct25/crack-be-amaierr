@@ -28,72 +28,72 @@ const authMenus = [
 
 
 async function main() {
-    const studentRole = await prisma.role.upsert({
-      where:{code: VARIABLE.ROLES.STUDENT},
-      update: {},
+  const studentRole = await prisma.role.upsert({
+    where:{code: VARIABLE.ROLES.STUDENT},
+    update: {},
+    create: {
+      code: VARIABLE.ROLES.STUDENT,
+      name: "Student",
+        
+    }
+  })
+  
+  const adminRole = await prisma.role.upsert({
+    where:{code: VARIABLE.ROLES.INSTRUCTOR},
+    update: {},
+    create: {
+      code: VARIABLE.ROLES.INSTRUCTOR,
+      name: "Instructor",
+        
+    }
+  })
+  
+  const menus = menuItems.map((menu) => {
+    return prisma.menu.upsert({
+      where: {code: menu.code},
+      update: {}, 
       create: {
-        code: VARIABLE.ROLES.STUDENT,
-        name: "Student",
-          
+        code: menu.code,
+        path: menu.path,
+        label: menu.label,
+        icon: menu.icon
       }
     })
-    
-    const adminRole = await prisma.role.upsert({
-      where:{code: VARIABLE.ROLES.INSTRUCTOR},
-      update: {},
-      create: {
-        code: VARIABLE.ROLES.INSTRUCTOR,
-        name: "Instructor",
-          
-      }
-    })
-    
-    const menus = menuItems.map(async (menu) => {
-      return await prisma.menu.upsert({
-        where: {code: menu.code},
-        update: {}, 
-        create: {
-          code: menu.code,
-          path: menu.path,
-          label: menu.label,
-          icon: menu.icon
-        }
-      })
-    }) 
+  })
+  await prisma.$transaction(menus)
 
-    const authorizations = authMenus.map(async (authMenu) => {
-      console.log(authMenu)
-      return await prisma.authorization.upsert({
-        where: {
-          menuId_roleId: {
-            menuId: (
-              await prisma.menu.findUniqueOrThrow({
-                where: { code: authMenu.menuCode },
-                select: { id: true }
-              })
-            ).id,
-            roleId: (
-              await prisma.role.findUniqueOrThrow({
-                where: { code: authMenu.roleCode },
-                select: { id: true }
-              })
-            ).id
-          }
+  const authorizations = authMenus.map(async (authMenu) => {
+    await prisma.authorization.upsert({
+      where: {
+        menuId_roleId: {
+          menuId: (
+            await prisma.menu.findUniqueOrThrow({
+              where: { code: authMenu.menuCode },
+              select: { id: true }
+            })
+          ).id,
+          roleId: (
+            await prisma.role.findUniqueOrThrow({
+              where: { code: authMenu.roleCode },
+              select: { id: true }
+            })
+          ).id
+        }
+      },
+      update: {},
+      create: {
+        menuIndex: authMenu.index,
+        menu: {
+          connect: { code: authMenu.menuCode }
         },
-        update: {},
-        create: {
-          menuIndex: authMenu.index,
-          menu: {
-            connect: { code: authMenu.menuCode }
-          },
-          role: {
-            connect: { code: authMenu.roleCode }
-          }
+        role: {
+          connect: { code: authMenu.roleCode }
         }
-      })
-    }) 
+      }
+    })
+  })
 
-    console.log({ studentRole, adminRole, menus, authorizations });
+  console.log({ studentRole, adminRole, menus, authorizations });
 }
 
 main()

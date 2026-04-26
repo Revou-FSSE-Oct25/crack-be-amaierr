@@ -7,12 +7,14 @@ import { ERROR_MESSAGES } from 'src/constants/error-messages';
 import { UsersRepository } from 'src/modules/users/users.repository';
 import { RolesRepository } from 'src/modules/roles/roles.repository';
 import { VARIABLE } from 'src/constants/variable';
+import { AuthUser } from './dto/auth-user.dto';
+import { AuthorizationsRepository } from './authorizations.repository';
 
 @Injectable()
 export class AuthorizationsService {
   constructor(
       private readonly usersRepository: UsersRepository,
-      private readonly rolesRepository: RolesRepository,
+      private readonly authorizationsRepository: AuthorizationsRepository,
       private jwtService: JwtService
     ) {}
 
@@ -28,9 +30,7 @@ export class AuthorizationsService {
       const hashedPassword = await bcrypt.hash(registerDto.password, 10)
       registerDto.password = hashedPassword
 
-      const roleId = await this.rolesRepository.getRoleIdByCode(VARIABLE.ROLES.STUDENT)
-
-      return this.usersRepository.createNewUser(registerDto, roleId!.id)
+      return this.usersRepository.createNewUser(registerDto)
     }
 
     async login(loginDto: LoginDto){
@@ -47,9 +47,13 @@ export class AuthorizationsService {
       }
 
       // Return token
-      const payload = {id: user.id, name: user.name, email: user.email, role: user.roles.name}
+      const payload = {id: user.id, name: user.name, email: user.email, roleCode: user.role.code, roleName: user.role.name}
       return {
         access_token: this.jwtService.sign(payload)
       };
+    }
+
+    async getMenuAuth(user: AuthUser){
+      return this.authorizationsRepository.getMenuAuth(user)
     }
 }
