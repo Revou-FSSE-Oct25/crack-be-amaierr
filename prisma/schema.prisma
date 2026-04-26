@@ -26,6 +26,15 @@ enum LevelTypes {
   Advanced
 }
 
+model category {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String     @db.VarChar
+  
+  courses course[]
+
+  @@map("categories")
+}
+
 model course {
   id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String     @db.VarChar
@@ -33,7 +42,11 @@ model course {
   levelType   LevelTypes @map("level_type")
   rating      Decimal    @default(0) @db.Decimal(2, 1)
   students    Int        @default(0)
+  instructor  String     @db.Uuid
+  categoryId  String     @db.Uuid @map("category_id")
 
+  user         user           @relation(fields: [instructor], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category     category       @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   curriculumns curriculumn[]
   enrollments  enrollment[]
 
@@ -117,6 +130,7 @@ model user {
   password String @db.VarChar
   roleId   String @map("role_id") @db.Uuid
 
+  courses     course[]
   enrollments enrollment[]
   progresses  progress[]
   role        role         @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
