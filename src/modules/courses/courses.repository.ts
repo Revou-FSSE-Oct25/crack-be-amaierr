@@ -18,4 +18,16 @@ export class CoursesRepository{
             }
         })
     }
+
+    async getUnenrolledCourses(user: AuthUser){
+        return await this.prisma.course.findMany({
+            where: {
+                enrollments: {
+                    none: {
+                        userId: user.id
+                    }
+                }
+            }
+        })
+    }
 }

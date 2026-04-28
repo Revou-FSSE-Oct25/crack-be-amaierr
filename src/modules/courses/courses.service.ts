@@ -1,14 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { AuthUser } from 'src/authorizations/dto/auth-user.dto';
 import { CoursesRepository } from './courses.repository';
+import { LevelTypes } from 'generated/prisma/enums';
+import { ERROR_MESSAGES } from 'src/constants/error-messages';
+import { CategoriesRepository } from '../categories/categories.repository';
 
 @Injectable()
 export class CoursesService {
-  constructor(private readonly courseRepository: CoursesRepository){}
+  constructor(
+    private readonly courseRepository: CoursesRepository,
+    private readonly categoriesRepository: CategoriesRepository
+  ){}
 
-  createCourse(user: AuthUser, createCourseDto: CreateCourseDto) {
+  async createCourse(user: AuthUser, createCourseDto: CreateCourseDto) {
+    const courseData = await this.categoriesRepository.findById(createCourseDto.categoryId)
+
+    if(!courseData){
+      throw new NotFoundException(ERROR_MESSAGES.CATEGORY.NOT_EXIST)
+    }
+
+    const levels = LevelTypes
+    if(!Object.values(levels).includes(createCourseDto.level)){
+      throw new NotAcceptableException(ERROR_MESSAGES.COURSE.LEVEL_NOT_VALID)
+    }
     return this.courseRepository.createCourse(user, createCourseDto)
   }
 
