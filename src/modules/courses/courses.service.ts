@@ -29,18 +29,10 @@ export class CoursesService {
   }
 
   getUnenrolledCourses(user: AuthUser) {
-    return `This action returns all courses`;
+    return this.courseRepository.getUnenrolledCourses(user)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
-  }
-
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  enrollCourse(user: AuthUser, courseId: string){
+    return this.courseRepository.enrollCourse(user, courseId)
   }
 }

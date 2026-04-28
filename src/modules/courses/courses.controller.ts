@@ -4,11 +4,14 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { User } from 'src/authorizations/decorator/user.decorator';
 import { AuthUser } from 'src/authorizations/dto/auth-user.dto';
+import { Roles } from 'src/authorizations/decorator/roles.decorator';
+import { VARIABLE } from 'src/constants/variable';
 
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  @Roles(VARIABLE.ROLES.INSTRUCTOR)
   @Post()
   createCourse(@User() user: AuthUser, @Body() createCourseDto: CreateCourseDto) {
     return this.coursesService.createCourse(user, createCourseDto);
@@ -19,18 +22,8 @@ export class CoursesController {
     return this.coursesService.getUnenrolledCourses(user);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(+id, updateCourseDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+  @Post('/enroll')
+  enrollCourse(@User() user: AuthUser, @Body() courseId: string){
+    return this.coursesService.enrollCourse(user, courseId)
   }
 }

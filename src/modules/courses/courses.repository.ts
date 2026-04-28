@@ -30,4 +30,24 @@ export class CoursesRepository{
             }
         })
     }
+
+    async enrollCourse(user: AuthUser, courseId: string){
+        return await this.prisma.enrollment.create({
+            data: {
+                userId: user.id,
+                courseId: courseId,
+                progressPercentage: 0
+            },
+            select: {
+                course: {
+                    select: {
+                        name: true,
+                        levelType: true,
+                        instructor: true
+                    }
+                },
+                progressPercentage: true
+            }
+        })
+    }
 }

@@ -7,7 +7,6 @@ export const ERROR_MESSAGES = {
   USER: {
     NOT_FOUND: 'User not found',
     ALREADY_EXISTS: 'User with this email already exists',
-    VIEW_FORBIDDEN: "Cannot view others account",
   },
   COURSE: {
     LEVEL_NOT_VALID: 'Level must be in (Beginner, Intermediate, or Advanced)',
