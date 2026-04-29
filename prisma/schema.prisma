@@ -27,26 +27,26 @@ enum LevelTypes {
 }
 
 model category {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String     @db.VarChar
-  
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @db.VarChar
+
   courses course[]
 
   @@map("categories")
 }
 
 model course {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String     @db.VarChar
-  description String     @db.VarChar
-  levelType   LevelTypes @map("level_type")
-  rating      Decimal    @default(0) @db.Decimal(2, 1)
-  students    Int        @default(0)
-  instructor  String     @db.Uuid
-  categoryId  String     @db.Uuid @map("category_id")
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String     @db.VarChar
+  description  String     @db.VarChar
+  levelType    LevelTypes @map("level_type")
+  rating       Decimal    @default(0) @db.Decimal(2, 1)
+  students     Int        @default(0)
+  instructorId String     @map("instructor_id") @db.Uuid
+  categoryId   String     @map("category_id") @db.Uuid
 
-  user         user           @relation(fields: [instructor], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  category     category       @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  instructor   user          @relation(fields: [instructorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category     category      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   curriculumns curriculumn[]
   enrollments  enrollment[]
 

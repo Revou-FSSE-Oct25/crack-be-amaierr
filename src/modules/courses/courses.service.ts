@@ -1,17 +1,19 @@
-import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { UpdateCourseDto } from './dto/update-course.dto';
 import { AuthUser } from 'src/authorizations/dto/auth-user.dto';
 import { CoursesRepository } from './courses.repository';
 import { LevelTypes } from 'generated/prisma/enums';
 import { ERROR_MESSAGES } from 'src/constants/error-messages';
 import { CategoriesRepository } from '../categories/categories.repository';
+import { EnrollmentsRepository } from '../enrollments/enrollments.repository';
+import { VARIABLE } from 'src/constants/variable';
 
 @Injectable()
 export class CoursesService {
   constructor(
     private readonly courseRepository: CoursesRepository,
-    private readonly categoriesRepository: CategoriesRepository
+    private readonly categoriesRepository: CategoriesRepository,
+    private readonly enrollmentsRepository: EnrollmentsRepository
   ){}
 
   async createCourse(user: AuthUser, createCourseDto: CreateCourseDto) {
@@ -32,7 +34,26 @@ export class CoursesService {
     return this.courseRepository.getUnenrolledCourses(user)
   }
 
-  enrollCourse(user: AuthUser, courseId: string){
-    return this.courseRepository.enrollCourse(user, courseId)
+  async enrollCourse(user: AuthUser, courseId: string){
+    const courseExist = await this.courseRepository.findById(courseId)
+    if(!courseExist){
+      throw new NotFoundException(ERROR_MESSAGES.COURSE.NOT_FOUND)
+    }
+    
+    const enrollExist = await this.enrollmentsRepository.findEnrollmentByUserIdAndCourseId(user.id, courseId)
+    if(enrollExist){
+      throw new ConflictException(ERROR_MESSAGES.ENROLL.ALREADY_EXIST)
+    }
+
+    return this.enrollmentsRepository.enrollCourse(user, courseId)
+  }
+
+  getMyCourses(user: AuthUser){
+    if(user.roleCode === VARIABLE.ROLES.INSTRUCTOR){
+      return this.courseRepository.getCourseByInstructorId(user.id)
+
+    } else if(user.roleCode === VARIABLE.ROLES.STUDENT){
+      return this.courseRepository.getEnrolledCourses(user.id)
+    }
   }
 }

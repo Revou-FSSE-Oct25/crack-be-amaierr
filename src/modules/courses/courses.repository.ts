@@ -7,13 +7,19 @@ import { AuthUser } from "src/authorizations/dto/auth-user.dto";
 export class CoursesRepository{
     constructor(private prisma: PrismaService) {}
 
+    async findById(courseId: string){
+        return await this.prisma.course.findUnique({
+            where: { id: courseId }
+        })
+    }
+
     async createCourse(user: AuthUser, createCourseDto: CreateCourseDto){
         return await this.prisma.course.create({
             data: {
                 name: createCourseDto.title,
                 description: createCourseDto.description,
                 levelType: createCourseDto.level,
-                instructor: user.id,
+                instructorId: user.id,
                 categoryId: createCourseDto.categoryId
             }
         })
@@ -27,26 +33,60 @@ export class CoursesRepository{
                         userId: user.id
                     }
                 }
+            },
+            select: {
+                name: true,
+                description: true,
+                levelType: true,
+                rating: true,
+                students: true,
+                instructor: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
+        })
+    }
+    
+    async getEnrolledCourses(userId: string){
+        return await this.prisma.course.findMany({
+            where: {
+                enrollments: {
+                    some: {
+                        userId: userId
+                    }
+                }
+            },
+            select: {
+                name: true,
+                description: true,
+                levelType: true,
+                rating: true,
+                students: true,
+                instructor: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         })
     }
 
-    async enrollCourse(user: AuthUser, courseId: string){
-        return await this.prisma.enrollment.create({
-            data: {
-                userId: user.id,
-                courseId: courseId,
-                progressPercentage: 0
-            },
+    async getCourseByInstructorId(instructorId: string){
+        return await this.prisma.course.findMany({
+            where: { instructorId: instructorId },
             select: {
-                course: {
+                name: true,
+                description: true,
+                levelType: true,
+                rating: true,
+                students: true,
+                instructor: {
                     select: {
-                        name: true,
-                        levelType: true,
-                        instructor: true
+                        name: true
                     }
-                },
-                progressPercentage: true
+                }
             }
         })
     }

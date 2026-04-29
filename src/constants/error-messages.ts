@@ -10,8 +10,12 @@ export const ERROR_MESSAGES = {
   },
   COURSE: {
     LEVEL_NOT_VALID: 'Level must be in (Beginner, Intermediate, or Advanced)',
+    NOT_FOUND: 'Course not found'
   },
   CATEGORY: {
     NOT_EXIST: 'Category not exist'
+  },
+  ENROLL: {
+    ALREADY_EXIST: 'You already enroll this course'
   }
 };

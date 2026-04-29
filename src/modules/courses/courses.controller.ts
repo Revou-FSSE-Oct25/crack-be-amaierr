@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { UpdateCourseDto } from './dto/update-course.dto';
 import { User } from 'src/authorizations/decorator/user.decorator';
 import { AuthUser } from 'src/authorizations/dto/auth-user.dto';
 import { Roles } from 'src/authorizations/decorator/roles.decorator';
@@ -22,8 +21,14 @@ export class CoursesController {
     return this.coursesService.getUnenrolledCourses(user);
   }
 
-  @Post('/enroll')
-  enrollCourse(@User() user: AuthUser, @Body() courseId: string){
+  @Roles(VARIABLE.ROLES.STUDENT)
+  @Post('/enroll/:course_id')
+  enrollCourse(@User() user: AuthUser, @Param('course_id') courseId: string){
     return this.coursesService.enrollCourse(user, courseId)
+  }
+
+  @Get('/my-course')
+  getMyCourses(@User() user: AuthUser){
+    return this.coursesService.getMyCourses(user)
   }
 }
