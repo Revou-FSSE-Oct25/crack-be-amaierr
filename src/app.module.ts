@@ -9,13 +9,14 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { RolesGuard } from './authorizations/guards/roles.guard';
+import { MenusModule } from './modules/menus/menus.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule, AuthorizationsModule, UsersModule, CoursesModule
+    PrismaModule, AuthorizationsModule, UsersModule, CoursesModule, MenusModule
   ],
   controllers: [AppController],
   providers: [
