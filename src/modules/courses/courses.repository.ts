@@ -35,6 +35,7 @@ export class CoursesRepository{
                 }
             },
             select: {
+                id: true,
                 name: true,
                 description: true,
                 levelType: true,
