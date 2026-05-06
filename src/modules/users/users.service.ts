@@ -10,10 +10,12 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository){}
 
   async updateUser(user: AuthUser, updateUserDto: UpdateUserDto) {
-    const existingUser = await this.usersRepository.getUserByEmail(updateUserDto.email)
-
-    if(existingUser){
-      throw new ConflictException(ERROR_MESSAGES.USER.ALREADY_EXISTS)
+    if(!user.email.match(updateUserDto.email)){
+      const existingUser = await this.usersRepository.getUserByEmail(updateUserDto.email)
+  
+      if(existingUser){
+        throw new ConflictException(ERROR_MESSAGES.USER.ALREADY_EXISTS)
+      }
     }
 
     return this.usersRepository.updateUser(user, updateUserDto)
