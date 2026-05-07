@@ -27,7 +27,7 @@ export class CoursesController {
     return this.coursesService.enrollCourse(user, courseId)
   }
 
-  @Get('/my-course')
+  @Get('/my-courses')
   getMyCourses(@User() user: AuthUser){
     return this.coursesService.getMyCourses(user)
   }

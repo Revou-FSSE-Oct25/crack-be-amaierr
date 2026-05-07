@@ -69,6 +69,11 @@ export class CoursesRepository{
                     select: {
                         name: true
                     }
+                },
+                enrollments: {
+                    select: {
+                        progressPercentage: true
+                    }
                 }
             }
         })
