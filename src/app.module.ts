@@ -10,13 +10,14 @@ import { UsersModule } from './modules/users/users.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { RolesGuard } from './authorizations/guards/roles.guard';
 import { MenusModule } from './modules/menus/menus.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule, AuthorizationsModule, UsersModule, CoursesModule, MenusModule
+    PrismaModule, AuthorizationsModule, UsersModule, CoursesModule, MenusModule, CategoriesModule
   ],
   controllers: [AppController],
   providers: [

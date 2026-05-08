@@ -10,4 +10,8 @@ export class CategoriesRepository {
             where: { id: id }
         })
     }
+
+    async getAllCategories(){
+        return this.prisma.category.findMany()
+    }
 }
