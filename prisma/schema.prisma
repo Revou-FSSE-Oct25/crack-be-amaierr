@@ -69,7 +69,8 @@ model enrollment {
   userId             String  @map("user_id") @db.Uuid
   courseId           String  @map("course_id") @db.Uuid
   progressPercentage Int     @map("progress_percentage")
-  review             String? @db.VarChar
+  rating             String? @db.VarChar
+  comment            String? @db.VarChar
 
   course course @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user   user   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)

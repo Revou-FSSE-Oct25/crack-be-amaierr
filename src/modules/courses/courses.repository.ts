@@ -60,6 +60,7 @@ export class CoursesRepository{
                 }
             },
             select: {
+                id: true,
                 name: true,
                 description: true,
                 levelType: true,
@@ -83,6 +84,7 @@ export class CoursesRepository{
         return await this.prisma.course.findMany({
             where: { instructorId: instructorId },
             select: {
+                id: true, 
                 name: true,
                 description: true,
                 levelType: true,
@@ -91,6 +93,33 @@ export class CoursesRepository{
                 instructor: {
                     select: {
                         name: true
+                    }
+                }
+            }
+        })
+    }
+
+    async getCourseDetail(courseId: string){
+        return await this.prisma.course.findUnique({
+            where: {id: courseId},
+            select: {
+                name: true,
+                description: true,
+                rating: true,
+                students: true,
+                levelType: true,
+                instructor: {select: {
+                    name: true
+                }},
+                curriculumns:{
+                    select:{
+                        name: true,
+                        subCurriculums: {
+                            select: {
+                                name: true,
+                                materialLink: true
+                            }
+                        }
                     }
                 }
             }

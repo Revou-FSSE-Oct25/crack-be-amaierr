@@ -31,4 +31,9 @@ export class CoursesController {
   getMyCourses(@User() user: AuthUser){
     return this.coursesService.getMyCourses(user)
   }
+
+  @Get(':course_id')
+  getCourseDetail(@Param('course_id') courseId: string){
+    return this.coursesService.getCourseDetail(courseId)
+  }
 }

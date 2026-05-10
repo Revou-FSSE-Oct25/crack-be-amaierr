@@ -7,6 +7,7 @@ import { ERROR_MESSAGES } from 'src/constants/error-messages';
 import { CategoriesRepository } from '../categories/categories.repository';
 import { EnrollmentsRepository } from '../enrollments/enrollments.repository';
 import { VARIABLE } from 'src/constants/variable';
+import { CourseDetailDto } from './dto/course-detail.dto';
 
 @Injectable()
 export class CoursesService {
@@ -56,4 +57,18 @@ export class CoursesService {
       return this.courseRepository.getEnrolledCourses(user.id)
     }
   }
+
+  async getCourseDetail(courseId: string) {
+    const courseDetail = await this.courseRepository.getCourseDetail(courseId)
+
+    if(!courseDetail) throw new NotFoundException(ERROR_MESSAGES.COURSE.NOT_FOUND) 
+
+    let courseDetailDto = new CourseDetailDto(courseDetail)
+    
+    const reviews = await this.enrollmentsRepository.getAllRating(courseId)
+
+    courseDetailDto.reviews = reviews
+
+    return courseDetailDto
+}
 }

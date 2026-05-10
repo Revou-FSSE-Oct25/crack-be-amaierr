@@ -39,4 +39,24 @@ export class EnrollmentsRepository {
             }
         })
     }
+
+    async getAllRating(courseId: string){
+        return await this.prisma.enrollment.findMany({
+            where: {
+                courseId: courseId,
+                rating: {
+                    not: null
+                }
+            },
+            select: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                },
+                rating: true,
+                comment: true
+            }
+        })
+    }
 }
