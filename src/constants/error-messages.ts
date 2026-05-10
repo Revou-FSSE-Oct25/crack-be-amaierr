@@ -17,5 +17,8 @@ export const ERROR_MESSAGES = {
   },
   ENROLL: {
     ALREADY_EXIST: 'You already enroll this course'
+  },
+  ROLE: {
+    NOT_FOUND: 'Role not found'
   }
 };

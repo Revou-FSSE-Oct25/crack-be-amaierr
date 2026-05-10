@@ -6,7 +6,6 @@ import { LoginDto } from './dto/login.dto';
 import { ERROR_MESSAGES } from 'src/constants/error-messages';
 import { UsersRepository } from 'src/modules/users/users.repository';
 import { RolesRepository } from 'src/modules/roles/roles.repository';
-import { VARIABLE } from 'src/constants/variable';
 import { AuthUser } from './dto/auth-user.dto';
 import { AuthorizationsRepository } from './authorizations.repository';
 
@@ -14,6 +13,7 @@ import { AuthorizationsRepository } from './authorizations.repository';
 export class AuthorizationsService {
   constructor(
       private readonly usersRepository: UsersRepository,
+      private readonly rolesRepository: RolesRepository,
       private readonly authorizationsRepository: AuthorizationsRepository,
       private jwtService: JwtService
     ) {}
@@ -24,6 +24,13 @@ export class AuthorizationsService {
       
       if(existingUser){
         throw new ConflictException(ERROR_MESSAGES.USER.ALREADY_EXISTS)
+      }
+
+      const role = await this.rolesRepository.findById(registerDto.role)
+
+
+      if(!role){
+        throw new NotFoundException(ERROR_MESSAGES.ROLE.NOT_FOUND)
       }
       
       // Hash password

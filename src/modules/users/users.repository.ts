@@ -40,9 +40,7 @@ export class UsersRepository {
                 email: registerDto.email,
                 name: registerDto.name,
                 password: registerDto.password,
-                role: {
-                    connect: { code: VARIABLE.ROLES.STUDENT }
-                }
+                roleId: registerDto.role
             },
             select: {
                 name: true,

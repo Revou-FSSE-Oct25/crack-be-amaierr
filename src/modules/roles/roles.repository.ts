@@ -5,10 +5,9 @@ import { PrismaService } from "prisma/prisma.service";
 export class RolesRepository {
     constructor(private prisma: PrismaService) {}
 
-    async getRoleIdByCode(code: string){
+    async findById(roleId: string){
         return this.prisma.role.findUnique({
-            where: { code: code },
-            select: { id: true }
+            where: { id: roleId }
         })
     }
 }
