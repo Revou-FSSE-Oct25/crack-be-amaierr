@@ -42,6 +42,7 @@ model course {
   levelType    LevelTypes @map("level_type")
   rating       Decimal    @default(0) @db.Decimal(2, 1)
   students     Int        @default(0)
+  duration     Int        @default(0)
   instructorId String     @map("instructor_id") @db.Uuid
   categoryId   String     @map("category_id") @db.Uuid
 
@@ -69,7 +70,7 @@ model enrollment {
   userId             String  @map("user_id") @db.Uuid
   courseId           String  @map("course_id") @db.Uuid
   progressPercentage Int     @map("progress_percentage")
-  rating             String? @db.VarChar
+  rating             Int?
   comment            String? @db.VarChar
 
   course course @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -116,6 +117,7 @@ model sub_curriculumn {
   id            String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   curriculumnId String @map("curriculumn_id") @db.Uuid
   name          String @db.VarChar(50)
+  duration      Int    @default(0)
   materialLink  String @map("material_link") @db.VarChar
 
   progresses  progress[]

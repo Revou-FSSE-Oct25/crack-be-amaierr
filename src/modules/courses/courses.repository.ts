@@ -99,25 +99,45 @@ export class CoursesRepository{
         })
     }
 
-    async getCourseDetail(courseId: string){
+    async getCourseDetail(user: AuthUser, courseId: string){
         return await this.prisma.course.findUnique({
             where: {id: courseId},
             select: {
                 name: true,
                 description: true,
+                duration: true,
                 rating: true,
                 students: true,
                 levelType: true,
-                instructor: {select: {
-                    name: true
-                }},
+                instructor: {
+                    select: {
+                        name: true
+                    }
+                },
+                enrollments: {
+                    where: {userId: user.id},
+                    select: {
+                        progressPercentage: true
+                    }
+                },
                 curriculumns:{
                     select:{
+                        id: true,
                         name: true,
                         subCurriculums: {
                             select: {
+                                id: true,
                                 name: true,
-                                materialLink: true
+                                duration: true,
+                                materialLink: true,
+                                progresses: {
+                                    where: {
+                                        userId: user.id
+                                    },
+                                    select: {
+                                        isDone: true
+                                    }
+                                }
                             }
                         }
                     }

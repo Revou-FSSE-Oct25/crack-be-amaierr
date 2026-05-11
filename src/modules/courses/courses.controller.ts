@@ -33,7 +33,7 @@ export class CoursesController {
   }
 
   @Get(':course_id')
-  getCourseDetail(@Param('course_id') courseId: string){
-    return this.coursesService.getCourseDetail(courseId)
+  getCourseDetail(@User() user: AuthUser, @Param('course_id') courseId: string){
+    return this.coursesService.getCourseDetail(user, courseId)
   }
 }

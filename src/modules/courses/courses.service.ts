@@ -58,8 +58,8 @@ export class CoursesService {
     }
   }
 
-  async getCourseDetail(courseId: string) {
-    const courseDetail = await this.courseRepository.getCourseDetail(courseId)
+  async getCourseDetail(user: AuthUser, courseId: string) {
+    const courseDetail = await this.courseRepository.getCourseDetail(user, courseId)
 
     if(!courseDetail) throw new NotFoundException(ERROR_MESSAGES.COURSE.NOT_FOUND) 
 
