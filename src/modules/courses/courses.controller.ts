@@ -32,7 +32,7 @@ export class CoursesController {
     return this.coursesService.getMyCourses(user)
   }
 
-  @Get(':course_id')
+  @Get('/course/:course_id')
   getCourseDetail(@User() user: AuthUser, @Param('course_id') courseId: string){
     return this.coursesService.getCourseDetail(user, courseId)
   }

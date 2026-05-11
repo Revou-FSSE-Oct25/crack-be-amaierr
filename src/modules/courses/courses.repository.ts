@@ -39,6 +39,7 @@ export class CoursesRepository{
                 name: true,
                 description: true,
                 levelType: true,
+                duration: true,
                 rating: true,
                 students: true,
                 instructor: {
@@ -64,6 +65,7 @@ export class CoursesRepository{
                 name: true,
                 description: true,
                 levelType: true,
+                duration: true,
                 rating: true,
                 students: true,
                 instructor: {
@@ -88,6 +90,7 @@ export class CoursesRepository{
                 name: true,
                 description: true,
                 levelType: true,
+                duration: true,
                 rating: true,
                 students: true,
                 instructor: {
