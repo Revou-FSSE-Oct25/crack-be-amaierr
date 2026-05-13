@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "prisma/prisma.service";
 import { CreateCourseDto } from "./dto/create-course.dto";
 import { AuthUser } from "src/authorizations/dto/auth-user.dto";
+import { FilterCourseDto } from "./dto/course-filter.dto";
 
 @Injectable()
 export class CoursesRepository{
@@ -25,14 +26,19 @@ export class CoursesRepository{
         })
     }
 
-    async getUnenrolledCourses(user: AuthUser){
+    async getUnenrolledCourses(user: AuthUser, filter: FilterCourseDto){
+        const { category, level, title } = filter;
+
         return await this.prisma.course.findMany({
             where: {
                 enrollments: {
                     none: {
                         userId: user.id
                     }
-                }
+                },
+                ...(category? {categoryId : category} : {}),
+                ...(level? {levelType : level} : {}),
+                ...(title? {name : { contains: title, mode: 'insensitive' }} : {}),
             },
             select: {
                 id: true,
@@ -51,14 +57,19 @@ export class CoursesRepository{
         })
     }
     
-    async getEnrolledCourses(userId: string){
+    async getEnrolledCourses(userId: string, filter: FilterCourseDto){
+        const { category, level, title } = filter;
+
         return await this.prisma.course.findMany({
             where: {
                 enrollments: {
                     some: {
                         userId: userId
                     }
-                }
+                },
+                ...(category? {categoryId : category} : {}),
+                ...(level? {levelType : level} : {}),
+                ...(title? {name : { contains: title, mode: 'insensitive' }} : {}),
             },
             select: {
                 id: true,
@@ -82,9 +93,16 @@ export class CoursesRepository{
         })
     }
 
-    async getCourseByInstructorId(instructorId: string){
+    async getCourseByInstructorId(instructorId: string, filter: FilterCourseDto){
+        const { category, level, title } = filter;
+
         return await this.prisma.course.findMany({
-            where: { instructorId: instructorId },
+            where: { 
+                instructorId: instructorId,
+                ...(category? {categoryId : category} : {}),
+                ...(level? {levelType : level} : {}),
+                ...(title? {name : { contains: title, mode: 'insensitive' }} : {}),
+            },
             select: {
                 id: true, 
                 name: true,

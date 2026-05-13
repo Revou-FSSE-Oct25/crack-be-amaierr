@@ -1,5 +1,7 @@
+import { LevelTypes } from "generated/prisma/enums"
+
 export class FilterCourseDto {
-    freeText: string
+    title: string
     category: string
-    level: String
+    level: LevelTypes
 }

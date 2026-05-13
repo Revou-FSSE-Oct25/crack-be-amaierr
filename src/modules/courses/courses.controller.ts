@@ -5,6 +5,7 @@ import { User } from 'src/authorizations/decorator/user.decorator';
 import { AuthUser } from 'src/authorizations/dto/auth-user.dto';
 import { Roles } from 'src/authorizations/decorator/roles.decorator';
 import { VARIABLE } from 'src/constants/variable';
+import { FilterCourseDto } from './dto/course-filter.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -16,9 +17,9 @@ export class CoursesController {
     return this.coursesService.createCourse(user, createCourseDto);
   }
 
-  @Get('/browse')
-  getUnenrolledCourses(@User() user: AuthUser) {
-    return this.coursesService.getUnenrolledCourses(user);
+  @Post('/browse')
+  getUnenrolledCourses(@User() user: AuthUser, @Body() filter: FilterCourseDto) {
+    return this.coursesService.getUnenrolledCourses(user, filter);
   }
 
   @Roles(VARIABLE.ROLES.STUDENT)
@@ -27,9 +28,9 @@ export class CoursesController {
     return this.coursesService.enrollCourse(user, courseId)
   }
 
-  @Get('/my-courses')
-  getMyCourses(@User() user: AuthUser){
-    return this.coursesService.getMyCourses(user)
+  @Post('/my-courses')
+  getMyCourses(@User() user: AuthUser, @Body() filter: FilterCourseDto){
+    return this.coursesService.getMyCourses(user, filter)
   }
 
   @Get('/course/:course_id')

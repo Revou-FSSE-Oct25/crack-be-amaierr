@@ -8,6 +8,7 @@ import { CategoriesRepository } from '../categories/categories.repository';
 import { EnrollmentsRepository } from '../enrollments/enrollments.repository';
 import { VARIABLE } from 'src/constants/variable';
 import { CourseDetailDto } from './dto/course-detail.dto';
+import { FilterCourseDto } from './dto/course-filter.dto';
 
 @Injectable()
 export class CoursesService {
@@ -31,8 +32,8 @@ export class CoursesService {
     return this.courseRepository.createCourse(user, createCourseDto)
   }
 
-  getUnenrolledCourses(user: AuthUser) {
-    return this.courseRepository.getUnenrolledCourses(user)
+  getUnenrolledCourses(user: AuthUser, filter: FilterCourseDto) {
+    return this.courseRepository.getUnenrolledCourses(user, filter)
   }
 
   async enrollCourse(user: AuthUser, courseId: string){
@@ -49,12 +50,12 @@ export class CoursesService {
     return this.enrollmentsRepository.enrollCourse(user, courseId)
   }
 
-  getMyCourses(user: AuthUser){
+  getMyCourses(user: AuthUser, filter: FilterCourseDto){
     if(user.roleCode === VARIABLE.ROLES.INSTRUCTOR){
-      return this.courseRepository.getCourseByInstructorId(user.id)
+      return this.courseRepository.getCourseByInstructorId(user.id, filter)
 
     } else if(user.roleCode === VARIABLE.ROLES.STUDENT){
-      return this.courseRepository.getEnrolledCourses(user.id)
+      return this.courseRepository.getEnrolledCourses(user.id, filter)
     }
   }
 
