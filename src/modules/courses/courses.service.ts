@@ -9,13 +9,18 @@ import { EnrollmentsRepository } from '../enrollments/enrollments.repository';
 import { VARIABLE } from 'src/constants/variable';
 import { CourseDetailDto } from './dto/course-detail.dto';
 import { FilterCourseDto } from './dto/course-filter.dto';
+import { SubCurriculumRepository } from '../sub-curriculums/sub-curriculums.repository';
+import { ProgressesRepository } from '../progresses/progresses.repository';
+import { CreateCourseProgressDto } from '../progresses/dto/create-progress.dto';
 
 @Injectable()
 export class CoursesService {
   constructor(
     private readonly courseRepository: CoursesRepository,
     private readonly categoriesRepository: CategoriesRepository,
-    private readonly enrollmentsRepository: EnrollmentsRepository
+    private readonly enrollmentsRepository: EnrollmentsRepository,
+    private readonly subCurriculumRepository: SubCurriculumRepository,
+    private readonly progressesRepository: ProgressesRepository
   ){}
 
   async createCourse(user: AuthUser, createCourseDto: CreateCourseDto) {
@@ -46,8 +51,23 @@ export class CoursesService {
     if(enrollExist){
       throw new ConflictException(ERROR_MESSAGES.ENROLL.ALREADY_EXIST)
     }
+    
+    const enrollRes = await this.enrollmentsRepository.enrollCourse(user, courseId)
 
-    return this.enrollmentsRepository.enrollCourse(user, courseId)
+    const subCurriculums = await this.subCurriculumRepository.getAllSubCurriculumByCourseId(courseId)
+    
+    let progressesData: CreateCourseProgressDto[] = []
+
+    subCurriculums.map(subCurriculum =>{
+      progressesData.push({
+        userId: user.id,
+        subCurriculumId: subCurriculum.id
+      })
+    })
+
+    await this.progressesRepository.createNewCourseProgresses(progressesData)
+
+    return enrollRes
   }
 
   getMyCourses(user: AuthUser, filter: FilterCourseDto){

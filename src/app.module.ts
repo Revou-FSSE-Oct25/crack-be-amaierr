@@ -11,13 +11,14 @@ import { CoursesModule } from './modules/courses/courses.module';
 import { RolesGuard } from './authorizations/guards/roles.guard';
 import { MenusModule } from './modules/menus/menus.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { SubCurriculumsModule } from './modules/sub-curriculums/sub-curriculums.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule, AuthorizationsModule, UsersModule, CoursesModule, MenusModule, CategoriesModule
+    PrismaModule, AuthorizationsModule, UsersModule, CoursesModule, MenusModule, CategoriesModule, SubCurriculumsModule
   ],
   controllers: [AppController],
   providers: [

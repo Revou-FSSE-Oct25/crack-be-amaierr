@@ -20,5 +20,13 @@ export const ERROR_MESSAGES = {
   },
   ROLE: {
     NOT_FOUND: 'Role not found'
+  },
+  CURRICULUM: {
+    NOT_FOUND: "Curriculum not found",
+  },
+  SUB_CURRICULUM: {
+    NOT_FOUND: "Sub Curriculum not found",
+    DELETE_FORBIDDEN: "Can only be deleted by creator",
+    CREATE_FORBIDDEN: "Only course creator can create sub-curriculum",
   }
 };

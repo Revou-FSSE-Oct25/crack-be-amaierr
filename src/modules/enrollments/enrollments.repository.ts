@@ -15,6 +15,17 @@ export class EnrollmentsRepository {
         })
     }
 
+    async findUsersEnrolledByCourseId(courseId: string){
+        return await this.prisma.enrollment.findMany({
+            where: {
+                courseId: courseId
+            },
+            select: {
+                userId: true
+            }
+        })
+    }
+
     async enrollCourse(user: AuthUser, courseId: string){
         return await this.prisma.enrollment.create({
             data: {
