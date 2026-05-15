@@ -1,0 +1,508 @@
+{
+  "info": {
+    "_postman_id": "51c2ecb3-c7f5-4575-9c55-93d790fcc8b3",
+    "name": "LMS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33196763"
+  },
+  "item": [
+    {
+      "name": "Authorizations",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\" : \"student\",\r\n    \"email\" : \"student@student.com\",\r\n    \"password\" : \"student123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/register",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "// Access the token (adjust 'access_token' based on your API's JSON structure)\r",
+                  "const token = jsonData.access_token; \r",
+                  "\r",
+                  "// Save the token to an environment variable\r",
+                  "pm.environment.set(\"my_access_token\", token);\r",
+                  "\r",
+                  "console.log(\"Token has been saved!\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\" : \"student@student.com\",\r\n    \"password\" : \"student123\"\r\n    // \"email\" : \"instructor@instructor.com\",\r\n    // \"password\" : \"admin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/auth/login",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Menu Auth",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/auth/menus",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "auth",
+                "menus"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get User Detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/users",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\" : \"student\",\r\n    \"email\" : \"student@student.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/users",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Browse Course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"\",\r\n    \"category\": \"\",\r\n    \"level\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/courses/browse",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "courses",
+                "browse"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create New Course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Test Course\",\r\n    \"description\": \"This is only a course for testing\",\r\n    \"categoryId\": \"4b525062-e5e0-44f4-bd50-8f81614b95cd\",\r\n    \"level\": \"Beginner\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/courses",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enroll Course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/courses/enroll/:course_id",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "courses",
+                "enroll",
+                ":course_id"
+              ],
+              "variable": [
+                {
+                  "key": "course_id",
+                  "value": "93b216f3-f86b-4f02-9f81-697f93b67c3e"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"\",\r\n    \"category\": \"\",\r\n    \"level\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/courses/my-course",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "courses",
+                "my-course"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Course Detail",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{URL}}/courses/course/:course_id",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "courses",
+                "course",
+                ":course_id"
+              ],
+              "variable": [
+                {
+                  "key": "course_id",
+                  "value": "93b216f3-f86b-4f02-9f81-697f93b67c3e"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Menus",
+      "item": [
+        {
+          "name": "All Menus",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "All Category",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{URL}}/categories",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sub-curriculum",
+      "item": [
+        {
+          "name": "Sub curriculum",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{my_access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{URL}}/sub-curriculumns/:subCurriculumId",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "sub-curriculumns",
+                ":subCurriculumId"
+              ],
+              "variable": [
+                {
+                  "key": "subCurriculumId",
+                  "value": "43636932-44b0-48e8-aa34-dd38b5d1a891"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create sub curriculum",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"curriculumnId\": \"\",\r\n    \"name\": \"\",\r\n    \"materialLink\": \"\",\r\n    \"duration\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/sub-curriculumns",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "sub-curriculumns"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
