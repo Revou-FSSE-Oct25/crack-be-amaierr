@@ -8,6 +8,11 @@ Backend service for the Learning Management System (LMS) platform. This project 
 
 ---
 
+## ERD Diagram
+![alt text](image.png)
+
+---
+
 ## Features
 
 ### Authentication & Authorization
